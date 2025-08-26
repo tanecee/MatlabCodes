@@ -1,0 +1,147 @@
+OFDM Transmitter 
+Part 1: Define Parameters 
+Set the FFT size (number of subcarriers).
+
+Set the number of OFDM symbols.
+
+Initialize a resource grid (matrix of subcarriers × OFDM symbols).
+
+Decide how many active subcarriers will be used.
+
+Divide the active subcarriers into:
+
+data subcarriers
+
+pilot subcarriers
+
+Calculate the total number of resource elements (subcarriers × symbols).
+
+Split them equally into data symbols and pilot symbols.
+
+Define a pilot sequence (e.g., alternating +1 and -1).
+
+Determine indices (positions in the resource grid) for:
+
+Data subcarriers
+
+Pilot subcarriers (place data and pilot symbols in alternating positions).
+
+Define the synchronization sequence (e.g., Zadoff–Chu).
+
+Set the cyclic prefix length.
+
+Compute the total waveform length = (FFT size + cyclic prefix) × number of symbols.
+
+Set the modulation order (e.g., 4-QAM). 
+
+Part 2: Generate the OFDM Waveform
+Generate a random bitstream of length = (number of data symbols × log2(modulation order)).
+
+Map the bits to QAM symbols using the chosen modulation order.
+
+Insert data symbols into the resource grid at the data indices.
+
+Insert pilot symbols into the resource grid at the pilot indices.
+
+For each OFDM symbol (column of the grid):
+
+a. Take the IFFT of the subcarriers.
+
+b. Add a cyclic prefix (copy the last part of the IFFT output to the beginning).
+
+c. Store the resulting time-domain samples in the output signal.
+
+Normalize the signal (so its maximum amplitude = 1).
+
+Prepend the synchronization sequence to the signal.
+
+Output:
+
+The transmit signal in the time domain.
+
+The original data bits (for later use, e.g., error checking).
+
+------------------------------------------------------------------------------------------------------------------------------------- 
+Algorithm for OFDM Receiver Processing
+Input
+Received signal samples (rx_data).
+
+Transmitted bits (tx_bits) for BER comparison.
+
+System parameters (p).
+
+Step 1: Frequency Offset Correction (Initial)
+Apply an initial frequency correction by multiplying the received samples with a complex exponential (to compensate for a known offset).
+
+(Optional: a low-pass filter could be applied). 
+
+Step 2: Synchronization
+Cross-correlate the received signal with the known synchronization sequence.
+
+Detect the strongest correlation peak to find the start position of the OFDM frame.
+
+Extract the OFDM signal starting from the correct position (with synchronization sequence removed).
+
+Step 3: Estimate Residual CFO (Carrier Frequency Offset)
+For each OFDM symbol:
+
+Compare the cyclic prefix samples with the corresponding end samples of the symbol.
+
+Compute the phase difference between them.
+
+Store the median phase offset.
+
+Average the offsets across all symbols to estimate the residual CFO.
+
+Correct the signal by compensating for this residual CFO.
+
+Step 4: Normalize Signal
+Normalize the received signal amplitude (divide by max absolute value). 
+
+Step 5: FFT – Convert to Frequency Domain
+Initialize an empty resource grid (same shape as transmitter’s).
+
+For each OFDM symbol:
+
+Remove the cyclic prefix.
+
+Apply FFT.
+
+Apply FFT shift (so that subcarriers are centered).
+
+Store the result in the resource grid.
+
+Step 6: Channel Estimation Using Pilots
+Extract received pilot symbols from their known indices.
+
+Divide the known transmitted pilots by the received pilots to estimate the channel at pilot positions.
+
+Place the estimated channel values into a channel grid at pilot positions.
+
+Interpolate missing values (e.g., fill in between pilots by averaging neighbors).
+
+Apply channel estimates to corresponding data subcarriers.
+
+Step 7: Equalization
+Extract received data symbols from the grid.
+
+Compensate them using the channel estimates (element-wise multiplication with inverse of channel).
+
+Step 8: Symbol Decision & Demodulation
+Perform hard decision on received constellation points (map to nearest QAM symbol).
+
+Example: For QPSK, decide the symbol quadrant by sign of real and imaginary parts.
+
+Demodulate the corrected symbols into bits using the same modulation order as transmitter.
+
+Step 9: Bit Error Rate (BER) Calculation
+Compare received bits with transmitted bits.
+
+Count the number of errors.
+
+Output the BER (or simply number of bit errors in this implementation). 
+
+Output
+BER (or error count) between received and transmitted bits.
+
+(Optional: Constellation scatter plot and spectrum visualization if plotting is enabled).
