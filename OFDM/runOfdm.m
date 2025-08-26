@@ -1,4 +1,8 @@
 function [ber_results, num_errors_results] = runOfdm()
+%TX dalgaya kontrollü CFO (100 Hz) enjekte edilir; sonra istenen SNR’de gürültü eklenir.
+%RX çözümler; BER–SNR eğrisi çıkar.
+%awgn(...,'measured'): sinyal gücünü ölçüp ona göre doğru güçte gürültü ekler.
+
 p = parametersOFDM();
 cfo = 100; 
 SNR_dB = 0:5:20;
@@ -24,4 +28,5 @@ title('BER vs. SNR');
 xlabel('SNR (dB)');
 ylabel('Bit Error Rate');
 grid on;
+
 end
