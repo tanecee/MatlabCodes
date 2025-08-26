@@ -1,4 +1,4 @@
-function [tx, tx_bits, ofdmGrid] = ofdmTx()
+function [tx, tx_bits, ofdmGrid] = ofdmTx(p)
 p=parametersOFDM;
 
 num_data_symbols = p.Nsym*p.dataScs; %Toplam veri sembölü
@@ -35,5 +35,6 @@ tx = [p.sync; tx];
 %CP: sembol sonundaki cpLength örneği başa kopyalanır.
 %Dalga formunu normalize edip başına sync (ZC) preamble eklenir.
 end
+
 
 
