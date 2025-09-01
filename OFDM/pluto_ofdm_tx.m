@@ -25,7 +25,7 @@ xlabel('Frequency (MHz)');
 ylabel('Magnitude (dB)');
 grid on;
 xlim([-Fs/2e6, Fs/2e6]); 
-%
+
 tx = comm.SDRTxPluto('RadioID', 'sn:1044734c9605000417001f00ddea4f2bb1', ...
                      'CenterFrequency', fc, ...
                      'BasebandSampleRate', Fs, ...
@@ -45,4 +45,5 @@ xlabel('Örnek İndeksi');
 ylabel('Genlik');
 grid on;
 transmitRepeat(tx,txWave);
+
 end
