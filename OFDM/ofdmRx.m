@@ -78,10 +78,11 @@ ylabel('Imaginary Part');
 grid on;
 
 figure(15);
-plot(20*log10(abs(fftshift(fft(rx_data, 1024)))), 'b');
+plot(20*log10(abs(fftshift(fft(rx_data, p.sample_rate)))), 'b');
 title('Received Signal Spectrum');
 xlabel('Frequency Bin');
 ylabel('Magnitude (dB)');
 grid on;
 
 end
+
